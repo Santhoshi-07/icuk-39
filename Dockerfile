@@ -1,16 +1,12 @@
-# Use Java 17 base image
-FROM eclipse-temurin:17-jdk
+FROM python:3.9-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy the built JAR file into the image
-# Make sure this matches your actual file name after mvn package
-ADD target/demo-workshop-2.0.2.jar app.jar
+# Copy all project files
+COPY . .
 
-# Expose the default port (optional)
-EXPOSE 8080
+# Ensure __init__.py exists
+RUN mkdir -p tests && touch tests/__init__.py
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
+# Run tests
+RUN python3 -m unittest discover -s tests -p '*_test.py'
